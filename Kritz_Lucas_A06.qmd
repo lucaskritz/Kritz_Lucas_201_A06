@@ -104,6 +104,8 @@ Extract the value `8162` (LeBron James points) in 2 different ways:
 - using names
 
 ```{r}
+player_info[[2]][[4]]
+player_info$LJ$points
 
 ```
 
@@ -115,7 +117,12 @@ Add a new named element to the end of each player's list called `height`. The he
 Print the `player_info` list to prove you were successful.
 
 ```{r}
-
+heights = c(MJ = 78, LJ = 81, KB = 78, KA = 86, SO = 85)
+# for loop cycles through each list by name, adds an item called 'height' = the value in 'heights' vector that matches name
+for (player in names(player_info)) {
+  player_info[[player]]$height <- unname(heights[player]) # unname function used because R includes the name in the new list item by default
+}
+print(player_info)
 ```
 
 
@@ -134,7 +141,13 @@ Hint: initialize an empty list
 Note: this must still run correctly even if the values were to change or if another player were added to the list or if the player order changed.
 
 ```{r}
-
+ppg_list = list()
+for (player in names(player_info)){
+  # iterates through each player to calculate ppg value
+  ppg = (player_info[[player]]$points/player_info[[player]]$games_played)
+  # assigns ppg to correct player name in ppg_list
+  ppg_list[[player]] = ppg
+}
 ```
 
 
@@ -145,6 +158,11 @@ Use the list created in Part c and an appropriate apply function to round each v
 Store the output as a vector and print the results.
 
 ```{r}
+rounder = function(x){
+  round(x, 2)
+}
+rounded_ppg = sapply(ppg_list, rounder)
+print(rounded_ppg)
 
 ```
 
@@ -166,7 +184,19 @@ ie: 91 rounds to 90; 173 rounds to 200; 1450 rounds to 1000
 Hint: use `MARGIN = 1:2` to apply the function to each value instead of only a row/col.
 
 ```{r}
-
+rounder = function(x){
+  num <- nchar(x)
+  if (num == 2) {
+    return(round(x, -1))  #Nearest tens
+  } else if (num == 3) {
+    return(round(x, -2))  #Nearest hundreds
+  } else if (num == 4) {
+    return(round(x, -3))  #Nearest thousands
+  } else {
+    return(x) 
+  }
+}
+apply(mat_rand, c(1, 2), rounder)
 ```
 
 
