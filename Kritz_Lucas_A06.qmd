@@ -148,6 +148,7 @@ for (player in names(player_info)){
   # assigns ppg to correct player name in ppg_list
   ppg_list[[player]] = ppg
 }
+print(ppg_list)
 ```
 
 
@@ -264,15 +265,23 @@ Example (this is NOT the answer just an example of what goes in the {}):
 Note: This code should still run successfully even if the numbers were to change.
 
 ```{r}
-temp_cols = CO_data[, -c(1, 2)]
-min = min(temp_cols)
-max = max(temp_cols)
+# finds median values for all years
+med_vals = apply(CO_data[, -c(1, 2)], 1, median)
 
-max_row = which(temp_cols == max)
-max_year = CO_data$year[max]
-print(max_year)
-print(maxes)
-print(paste("The maximum median annual temperature of ))
+max_num = which.max(med_vals) # number of years after first year + 1 that max occured
+max_year = min(CO_data$year + max_num - 1)
+max_med = med_vals[max_num] # finds max median given by max_num
+
+min_num = which.min(med_vals) # number of years after first year + 1 that min occured
+min_year = min(CO_data$year + min_num - 1)
+min_med = med_vals[min_num] # finds min median given by min_num
+
+print(paste(
+  "The maximum median annual temperature of", max_med, 
+  "occurred in", max_year, 
+  "and the minimum median annual temperature of", min_med, 
+  "occurred in", min_year, "."
+))
 ```
 
 
@@ -291,7 +300,7 @@ digit_sum = function(x){
   } else{
     last_dig = x %% 10 # gets last digit
     other_dig = x %/% 10 # removes last digit using integer div
-    return(last_dig + digit_sum(other_dig)) # recursive function - continues until one digit left
+    return(last_dig + digit_sum(other_dig)) # recursive function - continues until one digit
   }
 }
 digit_sum(935068)
