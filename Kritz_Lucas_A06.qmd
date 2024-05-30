@@ -220,7 +220,13 @@ max_temps <- read_tsv("state_max_temps.tsv") |>
 Calculate the average temperature for each month across the whole data frame (using the data for all three states together).
 
 ```{r}
-
+avg_temp = function(x){
+cols <- as.numeric(x[3:length(x)])  # converts the cells in the proper columns to numeric
+  return(mean(cols, na.rm = TRUE))
+}
+col_avg = apply(max_temps, 2, avg_temp)
+col_avg = col_avg[3:length(col_avg)] # adjusts col_avg so it is just the month rows
+print(col_avg)
 ```
 
 
@@ -235,7 +241,9 @@ Create three new data frames by slicing the data by state.
 No need to print any output here.
 
 ```{r}
-
+CO_data = subset(max_temps, state == 'CO')
+OH_data = subset(max_temps, state == 'OH')
+VA_data = subset(max_temps, state == 'VA')
 ```
 
 
@@ -256,7 +264,15 @@ Example (this is NOT the answer just an example of what goes in the {}):
 Note: This code should still run successfully even if the numbers were to change.
 
 ```{r}
+temp_cols = CO_data[, -c(1, 2)]
+min = min(temp_cols)
+max = max(temp_cols)
 
+max_row = which(temp_cols == max)
+max_year = CO_data$year[max]
+print(max_year)
+print(maxes)
+print(paste("The maximum median annual temperature of ))
 ```
 
 
@@ -269,6 +285,17 @@ Example: The number 312 would return 6 (3 + 1 + 2)
 Run your function with 935068.
 
 ```{r}
-
+digit_sum = function(x){
+  if(x < 10){ # base case - if number is a single digit
+    return(x)
+  } else{
+    last_dig = x %% 10 # gets last digit
+    other_dig = x %/% 10 # removes last digit using integer div
+    return(last_dig + digit_sum(other_dig)) # recursive function - continues until one digit left
+  }
+}
+digit_sum(935068)
 ```
+
+
 
